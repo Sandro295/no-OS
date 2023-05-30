@@ -1,0 +1,17 @@
+<map id="adis_dev" name="adis_dev">
+<area shape="rect" id="node1" title="ADIS device descriptor structure." alt="" coords="1895,292,1975,319"/>
+<area shape="rect" id="node2" href="$structno__os__spi__desc.html" title="Structure holding SPI descriptor." alt="" coords="641,151,763,177"/>
+<area shape="rect" id="node13" href="$structno__os__spi__init__param.html" title="Structure holding the parameters for SPI initialization." alt="" coords="939,239,1102,265"/>
+<area shape="rect" id="node3" href="$structno__os__spi__platform__ops.html" title="Structure holding SPI function pointers that point to the platform specific function." alt="" coords="5,188,184,215"/>
+<area shape="rect" id="node4" href="$structno__os__spibus__desc.html" title="SPI bus descriptor." alt="" coords="323,188,469,215"/>
+<area shape="rect" id="node5" href="$structadis__chip__info.html" title="ADIS specific chip information structure." alt="" coords="1657,244,1772,271"/>
+<area shape="rect" id="node6" href="$structadis__data__field__map__def.html" title="ADIS filed map definition structure." alt="" coords="1287,136,1471,163"/>
+<area shape="rect" id="node7" href="$structadis__field.html" title="ADIS device field structure." alt="" coords="979,188,1063,215"/>
+<area shape="rect" id="node8" href="$structadis__timeout.html" title="ADIS chip timeouts." alt="" coords="1325,187,1432,213"/>
+<area shape="rect" id="node9" href="$structadis__clk__freq__limit.html" title="ADIS frequency limit for input synchronization clock." alt="" coords="1306,239,1451,265"/>
+<area shape="rect" id="node10" href="$structadis__init__param.html" title="ADIS device initialization parameters." alt="" coords="1315,289,1442,316"/>
+<area shape="rect" id="node11" href="$structno__os__gpio__init__param.html" title="Structure holding the parameters for GPIO initialization." alt="" coords="935,289,1107,316"/>
+<area shape="rect" id="node12" href="$structno__os__gpio__platform__ops.html" title="Structure holding gpio function pointers that point to the platform specific function." alt="" coords="608,315,796,341"/>
+<area shape="rect" id="node14" href="$structno__os__gpio__desc.html" title="Structure holding the GPIO descriptor." alt="" coords="1131,340,1263,367"/>
+<area shape="rect" id="node15" href="$structadis__diag__flags.html" title="Bitfield struct which maps on the diagnosis register." alt="" coords="1653,391,1776,417"/>
+</map>
