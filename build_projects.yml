@@ -27,7 +27,8 @@ jobs:
                -export_dir $(RELEASE_DIR)
                -log_dir $(LOG_DIR)
                -builds_dir /no-OS_builds/builds
-               -platform xilinx'
+               -platform xilinx
+               -hdl_branch hdl_2021_r2'
     displayName: 'Run project build'
   - task: PublishPipelineArtifact@1
     timeoutInMinutes: 10
@@ -58,7 +59,8 @@ jobs:
                -export_dir $(RELEASE_DIR)
                -log_dir $(LOG_DIR)
                -builds_dir /no-OS_builds/builds
-               -platform stm32'
+               -platform stm32
+               -hdl_branch hdl_2021_r2'
     displayName: 'Run project build'
   - task: PublishPipelineArtifact@1
     timeoutInMinutes: 10
@@ -89,7 +91,8 @@ jobs:
                -export_dir $(RELEASE_DIR)
                -log_dir $(LOG_DIR)
                -builds_dir /no-OS_builds/builds
-               -platform maxim'
+               -platform maxim
+               -hdl_branch hdl_2021_r2'
     displayName: 'Run project build'
   - task: PublishPipelineArtifact@1
     timeoutInMinutes: 10
@@ -120,7 +123,8 @@ jobs:
                -export_dir $(RELEASE_DIR)
                -log_dir $(LOG_DIR)
                -builds_dir /no-OS_builds/builds
-               -platform mbed'
+               -platform mbed
+               -hdl_branch hdl_2021_r2'
     displayName: 'Run project build'
   - task: PublishPipelineArtifact@1
     timeoutInMinutes: 10
@@ -151,7 +155,8 @@ jobs:
                -export_dir $(RELEASE_DIR)
                -log_dir $(LOG_DIR)
                -builds_dir /no-OS_builds/builds
-               -platform pico'
+               -platform pico
+               -hdl_branch hdl_2021_r2'
     displayName: 'Run project build'
   - task: PublishPipelineArtifact@1
     timeoutInMinutes: 10
@@ -182,7 +187,8 @@ jobs:
                -export_dir $(RELEASE_DIR)
                -log_dir $(LOG_DIR)
                -builds_dir /no-OS_builds/builds
-               -platform aducm3029'
+               -platform aducm3029
+               -hdl_branch hdl_2021_r2'
     displayName: 'Run project build'
   - task: PublishPipelineArtifact@1
     timeoutInMinutes: 10
