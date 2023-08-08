@@ -54,6 +54,11 @@
 
 #define PHY_CS			0
 
+#ifndef DUMMY
+#define DUMMY 			0
+#endif
+
+
 #ifdef QUAD_MXFE
 #define ADF4371_CS		0
 #define HMC7043_CS		4
