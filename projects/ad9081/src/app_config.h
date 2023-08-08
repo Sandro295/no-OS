@@ -56,7 +56,7 @@
 /* TX path */
 
 #define AD9081_TX_JESD_MODE		9
-#define AD9081_TX_JESD_SUBCLASS		1
+#define AD9081_TX_JESD_SUBCLASS		0
 #define AD9081_TX_JESD_VERSION		1
 #define AD9081_TX_JESD_M		8
 #define AD9081_TX_JESD_F		4
@@ -84,7 +84,7 @@
 /* RX path */
 
 #define AD9081_RX_JESD_MODE		10
-#define AD9081_RX_JESD_SUBCLASS		1
+#define AD9081_RX_JESD_SUBCLASS		0
 #define AD9081_RX_JESD_VERSION		1
 #define AD9081_RX_JESD_M		8
 #define AD9081_RX_JESD_F		4

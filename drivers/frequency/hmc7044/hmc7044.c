@@ -608,9 +608,16 @@ static int32_t hmc7044_setup(struct hmc7044_dev *dev)
 			      dev->gpi_ctrl[i]);
 	}
 
+	uint8_t tmp = 0;
 	for (i = 0; i < NO_OS_ARRAY_SIZE(dev->gpo_ctrl); i++) {
 		hmc7044_write(dev, HMC7044_REG_GPO_CTRL(i),
 			      dev->gpo_ctrl[i]);
+		hmc7044_read(dev, HMC7044_REG_GPO_CTRL(i), &tmp);
+		if (tmp != dev->gpo_ctrl[i]) {
+			printf("Error: readback is wrong\n");
+			printf("Wrote: %u ", dev->gpo_ctrl[i]);
+			printf("Read: %u \n", tmp);
+		}
 	}
 
 	no_os_mdelay(10);

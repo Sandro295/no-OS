@@ -77,15 +77,15 @@ int32_t no_os_clk_init(struct no_os_clk_desc **desc,
  * @param desc - The clock descriptor.
  * @return 0 in case of success, -1 otherwise.
  */
-int32_t no_os_clk_remove(struct no_os_clk_desc *desc)
+int32_t no_os_clk_remove(struct no_os_clk *desc)
 {
-	if (!desc || !desc->platform_ops)
-		return -EINVAL;
+//	if (!desc || !desc->platform_ops)
+//		return -EINVAL;
+//
+//	if (!desc->platform_ops->remove)
+//		return -ENOSYS;
 
-	if (!desc->platform_ops->remove)
-		return -ENOSYS;
-
-	return desc->platform_ops->remove(desc);
+	return 0;
 }
 
 /**
@@ -93,31 +93,26 @@ int32_t no_os_clk_remove(struct no_os_clk_desc *desc)
  * @param clk - The clock descriptor.
  * @return 0 in case of success, negative error code otherwise.
  */
-int32_t no_os_clk_enable(struct no_os_clk_desc *desc)
+int32_t no_os_clk_enable(struct no_os_clk * clk)
 {
-	if (!desc || !desc->platform_ops)
-		return -EINVAL;
+	return 0; // stub for jesd core
 
-	if (!desc->platform_ops->clk_enable)
-		return -ENOSYS;
-
-	return desc->platform_ops->clk_enable(desc);
+    if (clk->hw->dev_clk_enable)
+        return clk->hw->dev_clk_enable(clk->hw->dev);
+    else
+        return -1;
 }
-
 /**
  * Stop the clock.
  * @param clk - The clock descriptor.
  * @return 0 in case of success, negative error code otherwise.
  */
-int32_t no_os_clk_disable(struct no_os_clk_desc *desc)
+int32_t no_os_clk_disable(struct no_os_clk * clk)
 {
-	if (!desc || !desc->platform_ops)
-		return -EINVAL;
-
-	if (!desc->platform_ops->clk_disable)
-		return -ENOSYS;
-
-	return desc->platform_ops->clk_disable(desc);
+    if (clk->hw->dev_clk_disable)
+        return clk->hw->dev_clk_disable(clk->hw->dev);
+    else
+        return -1;
 }
 
 /**
@@ -126,16 +121,25 @@ int32_t no_os_clk_disable(struct no_os_clk_desc *desc)
  * @param rate - The current frequency.
  * @return 0 in case of success, negative error code otherwise.
  */
-int32_t no_os_clk_recalc_rate(struct no_os_clk_desc *desc,
-			      uint64_t *rate)
+//int32_t no_os_clk_recalc_rate(struct no_os_clk_desc *desc,
+//			      uint64_t *rate)
+//{
+//	if (!desc || !desc->platform_ops || !rate)
+//		return -EINVAL;
+//
+//	if (!desc->platform_ops->clk_recalc_rate)
+//		return -ENOSYS;
+//
+//	return desc->dev_desc->hclk_recalc_rate(desc, rate);
+//}
+
+int32_t no_os_clk_recalc_rate(struct no_os_clk *clk,
+        uint64_t *rate)
 {
-	if (!desc || !desc->platform_ops || !rate)
-		return -EINVAL;
-
-	if (!desc->platform_ops->clk_recalc_rate)
-		return -ENOSYS;
-
-	return desc->platform_ops->clk_recalc_rate(desc, rate);
+    if (clk->hw->dev_clk_recalc_rate)
+        return clk->hw->dev_clk_recalc_rate(clk->hw->dev, clk->hw_ch_num, rate);
+    else
+        return -1;
 }
 
 /**
@@ -145,18 +149,32 @@ int32_t no_os_clk_recalc_rate(struct no_os_clk_desc *desc,
  * @param rounded_rate - The rounded frequency.
  * @return 0 in case of success, negative error code otherwise.
  */
-int32_t no_os_clk_round_rate(struct no_os_clk_desc *desc,
+//int32_t no_os_clk_round_rate(struct no_os_clk_desc *desc,
+//			     uint64_t rate,
+//			     uint64_t *rounded_rate)
+//{
+//	if (!desc || !desc->platform_ops || !rounded_rate)
+//		return -EINVAL;
+//
+//	if (!desc->platform_ops->clk_round_rate)
+//		return -ENOSYS;
+//
+//	return desc->platform_ops->clk_round_rate(desc, rate, rounded_rate);
+//}
+int32_t no_os_clk_round_rate(struct no_os_clk *desc,
 			     uint64_t rate,
 			     uint64_t *rounded_rate)
 {
-	if (!desc || !desc->platform_ops || !rounded_rate)
+	if (!desc || !desc->hw || !rounded_rate)
 		return -EINVAL;
 
-	if (!desc->platform_ops->clk_round_rate)
+	if (!desc->hw->dev_clk_round_rate)
 		return -ENOSYS;
 
-	return desc->platform_ops->clk_round_rate(desc, rate, rounded_rate);
+	return desc->hw->dev_clk_round_rate(desc, rate, rounded_rate);
 }
+
+
 
 /**
  * Change the frequency of the clock.
@@ -164,14 +182,11 @@ int32_t no_os_clk_round_rate(struct no_os_clk_desc *desc,
  * @param rate - The desired frequency.
  * @return 0 in case of success, negative error code otherwise.
  */
-int32_t no_os_clk_set_rate(struct no_os_clk_desc *desc,
-			   uint64_t rate)
+int32_t no_os_clk_set_rate(struct no_os_clk *clk,
+        uint64_t rate)
 {
-	if (!desc || !desc->platform_ops)
-		return -EINVAL;
-
-	if (!desc->platform_ops->clk_set_rate)
-		return -ENOSYS;
-
-	return desc->platform_ops->clk_set_rate(desc, rate);
+    if (clk->hw->dev_clk_set_rate)
+        return clk->hw->dev_clk_set_rate(clk->hw->dev, clk->hw_ch_num, rate);
+    else
+        return -1;
 }

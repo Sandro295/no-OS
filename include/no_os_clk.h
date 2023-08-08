@@ -120,25 +120,25 @@ int32_t no_os_clk_init(struct no_os_clk_desc **desc,
 		       const struct no_os_clk_init_param *param);
 
 /* Free the resources allocated by no_os_clk_init(). */
-int32_t no_os_clk_remove(struct no_os_clk_desc *desc);
+int32_t no_os_clk_remove(struct no_os_clk *desc);
 
 /* Start the clock. */
-int32_t no_os_clk_enable(struct no_os_clk_desc *desc);
+int32_t no_os_clk_enable(struct no_os_clk *desc);
 
 /* Stop the clock. */
-int32_t no_os_clk_disable(struct no_os_clk_desc *desc);
+int32_t no_os_clk_disable(struct no_os_clk *desc);
 
 /* Get the current frequency of the clock. */
-int32_t no_os_clk_recalc_rate(struct no_os_clk_desc *desc,
+int32_t no_os_clk_recalc_rate(struct no_os_clk *desc,
 			      uint64_t *rate);
 
 /* Round the desired frequency to a rate that the clock can actually output. */
-int32_t no_os_clk_round_rate(struct no_os_clk_desc *desc,
+int32_t no_os_clk_round_rate(struct no_os_clk *desc,
 			     uint64_t rate,
 			     uint64_t *rounded_rate);
 
 /* Change the frequency of the clock. */
-int32_t no_os_clk_set_rate(struct no_os_clk_desc *desc,
-			   uint64_t rate);
+int32_t no_os_clk_set_rate(struct no_os_clk *clk,
+        uint64_t rate);
 
 #endif // _NO_OS_CLK_H_

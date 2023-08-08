@@ -72,19 +72,18 @@ static int16_t adc_buffer[MAX_ADC_BUF_SAMPLES] __attribute__ ((aligned));
 
 #endif
 
+
+#include "RG_custom.h"
+
 extern struct axi_jesd204_rx *rx_jesd;
 extern struct axi_jesd204_tx *tx_jesd;
 
 int main(void)
 {
-	struct no_os_clk app_clk[MULTIDEVICE_INSTANCE_COUNT];
+	struct no_os_clk app_clk;
 	struct no_os_clk jesd_clk[2];
 	struct xil_gpio_init_param  xil_gpio_param = {
-#ifdef PLATFORM_MB
-		.type = GPIO_PL,
-#else
 		.type = GPIO_PS,
-#endif
 		.device_id = GPIO_DEVICE_ID
 	};
 	struct no_os_gpio_init_param	gpio_phy_resetb = {
@@ -93,11 +92,7 @@ int main(void)
 		.extra = &xil_gpio_param
 	};
 	struct xil_spi_init_param xil_spi_param = {
-#ifdef PLATFORM_MB
-		.type = SPI_PL,
-#else
 		.type = SPI_PS,
-#endif
 	};
 	struct no_os_spi_init_param phy_spi_init_param = {
 		.device_id = PHY_SPI_DEVICE_ID,
@@ -146,16 +141,12 @@ int main(void)
 	struct ad9081_init_param phy_param = {
 		.gpio_reset = &gpio_phy_resetb,
 		.spi_init = &phy_spi_init_param,
-		.dev_clk = &app_clk[0],
+		.dev_clk = &app_clk,
 		.jesd_tx_clk = &jesd_clk[1],
 		.jesd_rx_clk = &jesd_clk[0],
 		.sysref_coupling_ac_en = 0,
 		.multidevice_instance_count = 1,
-#ifdef QUAD_MXFE
-		.jesd_sync_pins_01_swap_enable = true,
-#else
 		.jesd_sync_pins_01_swap_enable = false,
-#endif
 		.lmfc_delay_dac_clk_cycles = 0,
 		.nco_sync_ms_extra_lmfc_num = 0,
 		/* TX */
@@ -209,7 +200,7 @@ int main(void)
 		IRQ_DISABLED
 	};
 	struct axi_dmac *tx_dmac;
-	struct ad9081_phy* phy[MULTIDEVICE_INSTANCE_COUNT];
+	struct ad9081_phy* phy;
 	int32_t status;
 	int32_t i;
 
@@ -220,39 +211,15 @@ int main(void)
 	/* Enable the data cache. */
 	Xil_DCacheEnable();
 
-#ifdef QUAD_MXFE
-	struct xil_gpio_init_param  xil_gpio_param_2 = {
-#ifdef PLATFORM_MB
-		.type = GPIO_PL,
-#else
-		.type = GPIO_PS,
-#endif
-		.device_id = GPIO_2_DEVICE_ID
-	};
-	struct no_os_gpio_init_param	ad9081_gpio0_mux_init = {
-		.number = AD9081_GPIO_0_MUX,
-		.platform_ops = &xil_gpio_ops,
-		.extra = &xil_gpio_param_2
-	};
-	no_os_gpio_desc *ad9081_gpio0_mux;
-
-	status = no_os_gpio_get(&ad9081_gpio0_mux, &ad9081_gpio0_mux_init);
-	if (status)
-		return status;
-
-	status = no_os_gpio_set_value(ad9081_gpio0_mux, 1);
-	if (status)
-		return status;
-#endif
-
-	status = app_clock_init(app_clk);
-	if (status != 0)
+	status = app_clock_init(&app_clk);
+	if (status) {
 		printf("app_clock_init() error: %" PRId32 "\n", status);
+	}
 
-	status = app_jesd_init(jesd_clk,
-			       500000, 250000, 250000, 10000000, 10000000);
-	if (status != 0)
-		printf("app_jesd_init() error: %" PRId32 "\n", status);
+	 status = app_jesd_init(jesd_clk,
+	 		       500000, 250000, 250000, 10000000, 10000000);
+	 if (status != 0)
+	 	printf("app_jesd_init() error: %" PRId32 "\n", status);
 
 	rx_adc_init.num_channels = 0;
 	tx_dac_init.num_channels = 0;
@@ -260,109 +227,43 @@ int main(void)
 	for (i = 0; i < MULTIDEVICE_INSTANCE_COUNT; i++) {
 		gpio_phy_resetb.number = PHY_RESET + i;
 		phy_spi_init_param.chip_select = PHY_CS + i;
-		phy_param.dev_clk = &app_clk[i];
+		phy_param.dev_clk = &app_clk;
 		jtx_link_rx.device_id = i;
 
-		status = ad9081_init(&phy[i], &phy_param);
+		status = ad9081_init(&phy, &phy_param);
 		if (status != 0)
 			printf("ad9081_init() error: %" PRId32 "\n", status);
 
-		rx_adc_init.num_channels += phy[i]->jtx_link_rx[0].jesd_param.jesd_m +
-					    phy[i]->jtx_link_rx[1].jesd_param.jesd_m;
-
-		tx_dac_init.num_channels += phy[i]->jrx_link_tx.jesd_param.jesd_m *
-					    (phy[i]->jrx_link_tx.jesd_param.jesd_duallink > 0 ? 2 : 1);
+//		rx_adc_init.num_channels += phy[i]->jtx_link_rx[0].jesd_param.jesd_m +
+//					    phy[i]->jtx_link_rx[1].jesd_param.jesd_m;
+//
+//		tx_dac_init.num_channels += phy[i]->jrx_link_tx.jesd_param.jesd_m *
+//					    (phy[i]->jrx_link_tx.jesd_param.jesd_duallink > 0 ? 2 : 1);
 	}
 
-	axi_jesd204_rx_watchdog(rx_jesd);
+	printf("\nNow lets play with xJESD core\n");
 
-	axi_jesd204_tx_status_read(tx_jesd);
-	axi_jesd204_rx_status_read(rx_jesd);
+	printInfo();
+	
+	if (setSubclass(0) == fail) {
+		printf("failed to set sublcass\n");
+	}
 
-	axi_dac_init(&tx_dac, &tx_dac_init);
-	axi_adc_init(&rx_adc, &rx_adc_init);
+	if (setTestMode(5) == fail) {
+		printf("failed to set test mode\n");
+	}
 
-	axi_dmac_init(&tx_dmac, &tx_dmac_init);
-	axi_dmac_init(&rx_dmac, &rx_dmac_init);
+	no_os_mdelay(10);
+	printf("\n\n");
 
-#ifdef IIO_SUPPORT
+	printInfo();
 
-	/* iio axi adc configurations. */
-	struct iio_axi_adc_init_param iio_axi_adc_init_par;
-
-	/* iio axi dac configurations. */
-	struct iio_axi_dac_init_param iio_axi_dac_init_par;
-
-	/* iio instance descriptor. */
-	struct iio_axi_adc_desc *iio_axi_adc_desc;
-
-	/* iio instance descriptor. */
-	struct iio_axi_dac_desc *iio_axi_dac_desc;
-
-	/* iio devices corresponding to every device. */
-	struct iio_device *adc_dev_desc, *dac_dev_desc;
-
-	status = axi_dmac_init(&tx_dmac, &tx_dmac_init);
-	if(status < 0)
-		return status;
-
-	iio_axi_adc_init_par = (struct iio_axi_adc_init_param) {
-		.rx_adc = rx_adc,
-		.rx_dmac = rx_dmac,
-#ifndef PLATFORM_MB
-		.dcache_invalidate_range = (void (*)(uint32_t,
-						     uint32_t))Xil_DCacheInvalidateRange
-#endif
-	};
-
-	status = iio_axi_adc_init(&iio_axi_adc_desc, &iio_axi_adc_init_par);
-	if(status < 0)
-		return status;
-	iio_axi_adc_get_dev_descriptor(iio_axi_adc_desc, &adc_dev_desc);
-	struct iio_data_buffer read_buff = {
-		.buff = (void *)adc_buffer,
-		.size = sizeof(adc_buffer),
-	};
-
-	iio_axi_dac_init_par = (struct iio_axi_dac_init_param) {
-		.tx_dac = tx_dac,
-		.tx_dmac = tx_dmac,
-#ifndef PLATFORM_MB
-		.dcache_flush_range = (void (*)(uint32_t, uint32_t))Xil_DCacheFlushRange,
-#endif
-	};
-
-	status = iio_axi_dac_init(&iio_axi_dac_desc, &iio_axi_dac_init_par);
-	if (status < 0)
-		return status;
-	iio_axi_dac_get_dev_descriptor(iio_axi_dac_desc, &dac_dev_desc);
-
-	struct iio_data_buffer write_buff = {
-		.buff = (void *)dac_buffer,
-		.size = sizeof(dac_buffer),
-	};
-
-	struct iio_app_device devices[] = {
-		IIO_APP_DEVICE("axi_adc", iio_axi_adc_desc, adc_dev_desc, &read_buff, NULL),
-		IIO_APP_DEVICE("axi_dac", iio_axi_dac_desc, dac_dev_desc, NULL, &write_buff)
-	};
-
-	iio_app_run(NULL, 0, devices, NO_OS_ARRAY_SIZE(devices));
-
-	/* Disable the instruction cache. */
-	Xil_DCacheDisable();
-	/* Disable the data cache. */
-	Xil_ICacheDisable();
-
-#else // IIO_SUPPORT
 	printf("Bye\n");
-
+	
 	/* Disable the instruction cache. */
 	Xil_DCacheDisable();
 	/* Disable the data cache. */
 	Xil_ICacheDisable();
 
 	return 0;
-#endif
-
 }

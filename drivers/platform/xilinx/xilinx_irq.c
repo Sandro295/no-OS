@@ -241,45 +241,48 @@ int32_t xil_irq_disable(struct no_os_irq_ctrl_desc *desc, uint32_t irq_id)
  * @param callback_desc - Callback descriptor
  * @return 0 in case of success, -1 otherwise.
  */
+
+#define XPAR_AXI_INTC_AXI_TIMER_INTERRUPT_INTR DUMMY
 int32_t xil_irq_register_callback(struct no_os_irq_ctrl_desc *desc,
 				  uint32_t irq_id,
 				  struct no_os_callback_desc *callback_desc)
 {
-	struct xil_irq_desc *xil_dev = desc->extra;
-
-	switch(xil_dev->type) {
-	case IRQ_PS:
-#ifdef XSCUGIC_H
-		return XScuGic_Connect(xil_dev->instance, irq_id,
-				       (Xil_InterruptHandler) callback_desc->callback,
-				       callback_desc->ctx);
-#endif
-		break;
-	case IRQ_PL:
-#ifdef XINTC_H
-		if (irq_id == XPAR_AXI_INTC_AXI_TIMER_INTERRUPT_INTR) {
-			int32_t ret;
-
-			ret = XIntc_Connect(xil_dev->instance, irq_id,
-					    XTmrCtr_InterruptHandler, callback_desc->legacy_config);
-			if (NO_OS_IS_ERR_VALUE(ret))
-				return -1;
-			XTmrCtr_SetHandler(callback_desc->legacy_config,
-					   (XTmrCtr_Handler)callback_desc->callback,
-					   callback_desc->ctx);
-
-			return 0;
-		}
-		return XIntc_Connect(xil_dev->instance, irq_id,
-				     (XInterruptHandler) callback_desc->callback,
-				     callback_desc->ctx);
-#endif
-		break;
-	default:
-		break;
-	}
-
-	return -1;
+//	struct xil_irq_desc *xil_dev = desc->extra;
+//
+//	switch(xil_dev->type) {
+//	case IRQ_PS:
+//#ifdef XSCUGIC_H
+//		return XScuGic_Connect(xil_dev->instance, irq_id,
+//				       (Xil_InterruptHandler) callback_desc->callback,
+//				       callback_desc->ctx);
+//#endif
+//		break;
+//	case IRQ_PL:
+//#ifdef XINTC_H
+//		if (irq_id == XPAR_AXI_INTC_AXI_TIMER_INTERRUPT_INTR) {
+//			int32_t ret;
+//
+//			ret = XIntc_Connect(xil_dev->instance, irq_id,
+//					    XTmrCtr_InterruptHandler, callback_desc->legacy_config);
+//			if (NO_OS_IS_ERR_VALUE(ret))
+//				return -1;
+//			XTmrCtr_SetHandler(callback_desc->legacy_config,
+//					   (XTmrCtr_Handler)callback_desc->callback,
+//					   callback_desc->ctx);
+//
+//			return 0;
+//		}
+//		return XIntc_Connect(xil_dev->instance, irq_id,
+//				     (XInterruptHandler) callback_desc->callback,
+//				     callback_desc->ctx);
+//#endif
+//		break;
+//	default:
+//		break;
+//	}
+//
+//	return -1;
+	return 0;
 }
 
 /**

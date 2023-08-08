@@ -25,7 +25,8 @@
  *  - Use of the software either in source or binary form, must be run
  *    on or directly connected to an Analog Devices Inc. component.
  *
- * THIS SOFTWARE IS PROVIDED BY ANALOG DEVICES "AS IS" AND ANY EXPRESS OR
+ * THIS SOFTWARE IS PROVIDED BY
+ * ANALOG DEVICES "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, NON-INFRINGEMENT,
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
  * IN NO EVENT SHALL ANALOG DEVICES BE LIABLE FOR ANY DIRECT, INDIRECT,
@@ -52,6 +53,7 @@
 #include <inttypes.h>
 
 #define CHIPID_AD9081	0x9081
+#define CHIPID_AD9986   0x9986
 #define CHIPID_MASK	0xFFFF
 
 #define for_each_cddc(bit, mask) \
@@ -1102,7 +1104,7 @@ int32_t ad9081_init(struct ad9081_phy **dev,
 		goto error_3;
 	}
 
-	if ((chip_id.prod_id & CHIPID_MASK) != CHIPID_AD9081) {
+	if ((chip_id.prod_id & CHIPID_MASK) != CHIPID_AD9986) {
 		printf("%s: Unrecognized CHIP_ID 0x%X\n", __func__,
 		       chip_id.prod_id);
 		ret = -1;

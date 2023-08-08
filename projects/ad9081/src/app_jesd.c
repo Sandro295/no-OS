@@ -144,11 +144,11 @@ int32_t app_jesd_init(struct no_os_clk clk[2],
 #endif
 
 	ret = axi_jesd204_tx_init(&tx_jesd, &tx_jesd_init);
-	if (ret)
-		return ret;
+//	if (ret)
+//		return ret;
 	ret = axi_jesd204_rx_init(&rx_jesd, &rx_jesd_init);
-	if (ret)
-		return ret;
+//	if (ret)
+//		return ret;
 
 #ifdef RX_XCVR_BASEADDR
 	rx_jesd_clk.xcvr = rx_adxcvr;
@@ -159,16 +159,27 @@ int32_t app_jesd_init(struct no_os_clk clk[2],
 #endif
 	tx_jesd_clk.jesd_tx = tx_jesd;
 
-	jesd_rx_hw.dev = &rx_jesd_clk;
-	jesd_rx_hw.dev_clk_enable = jesd204_clk_enable;
-	jesd_rx_hw.dev_clk_disable = jesd204_clk_disable;
-	jesd_rx_hw.dev_clk_set_rate = jesd204_clk_set_rate;
+//	jesd_rx_hw.dev = &rx_jesd_clk;
+//	jesd_rx_hw.dev_clk_enable 	= jesd204_clk_enable;
+//	jesd_rx_hw.dev_clk_disable 	= jesd204_clk_disable;
+//	jesd_rx_hw.dev_clk_set_rate = jesd204_clk_set_rate;
+//
+//	jesd_tx_hw.dev = &tx_jesd_clk;
+//	jesd_tx_hw.dev_clk_enable 	= jesd204_clk_enable;
+//	jesd_tx_hw.dev_clk_disable 	= jesd204_clk_disable;
+//	jesd_tx_hw.dev_clk_set_rate = jesd204_clk_set_rate;
 
-	jesd_tx_hw.dev = &tx_jesd_clk;
-	jesd_tx_hw.dev_clk_enable = jesd204_clk_enable;
-	jesd_tx_hw.dev_clk_disable = jesd204_clk_disable;
-	jesd_tx_hw.dev_clk_set_rate = jesd204_clk_set_rate;
+	jesd_rx_hw.dev = NULL;
+	jesd_rx_hw.dev_clk_enable 	= NULL;
+	jesd_rx_hw.dev_clk_disable 	= NULL;
+	jesd_rx_hw.dev_clk_set_rate = NULL;
 
+	jesd_tx_hw.dev = NULL;
+	jesd_tx_hw.dev_clk_enable 	= NULL;
+	jesd_tx_hw.dev_clk_disable 	= NULL;
+	jesd_tx_hw.dev_clk_set_rate = NULL;
+
+	
 	clk[0].name = "jesd_rx";
 	clk[0].hw = &jesd_rx_hw;
 
